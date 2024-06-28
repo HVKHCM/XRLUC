@@ -58,7 +58,7 @@ class customDQN(DQN):
         
         return q_values.cpu().numpy()
 
-# Create the environment
+""" # Create the environment
 env = ll()
 
 # Stable Baselines3 expects vectorized environments
@@ -83,4 +83,4 @@ print(type(obs))
 action, _state = model.predict(obs, deterministic=True)
 print(model.predict_q(obs))
 
-env.close() 
+env.close()  """

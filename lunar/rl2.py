@@ -4,7 +4,7 @@ import pydotplus
 from IPython.display import Image
 from sklearn import tree
 from gymnasium.envs.toy_text.taxi import *
-from taxiSB import *
+from lunarSB import *
 import gymnasium
 from sklearn.tree import DecisionTreeClassifier
 import utils
@@ -14,8 +14,8 @@ def get_rollout(env, policy):
     env_decode = TaxiEnv()
     obs, info = env.reset()
     #print(obs)
-    row, column, passe, des = env_decode.decode(obs)
-    state_list = (row, column, passe, des)
+    #row, column, passe, des = env_decode.decode(obs)
+    #state_list = (row, column, passe, des)
     #obs = np.reshape(obs, [1, 1])
     rollout = []
 
@@ -26,7 +26,7 @@ def get_rollout(env, policy):
     next_obs, rew, done, truncated, info = env.step(act.tolist())
 
         # Rollout (s, a, r)
-    rollout.append((state_list, act, rew, obs))
+    rollout.append((obs.tolist(), act, rew, obs))
 
         # Update (and remove LazyFrames)
     obs = np.array(next_obs)
@@ -37,9 +37,9 @@ def get_rollout(env, policy):
 def get_rollout_student(env, policy):
     env_decode = TaxiEnv()
     obs, info = env.reset()
-    row, column, passe, des = env_decode.decode(obs)
-    state_tuple = (row, column, passe, des)
-    state_list = list(state_tuple)
+    #row, column, passe, des = env_decode.decode(obs)
+    #state_tuple = (row, column, passe, des)
+    state_list = obs.tolist()
     rollout = []
         # Action
     act = policy.predict(state_list)
@@ -47,7 +47,7 @@ def get_rollout_student(env, policy):
     next_obs, rew, done, truncated, info = env.step(act[0])
 
         # Rollout (s, a, r)
-    rollout.append((state_tuple, act, rew, obs))
+    rollout.append((state_list, act, rew, obs))
 
         # Update (and remove LazyFrames)
     obs = np.array(next_obs)

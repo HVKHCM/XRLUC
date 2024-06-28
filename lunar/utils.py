@@ -4,7 +4,7 @@ import pydotplus
 from IPython.display import Image
 from sklearn import tree
 from gymnasium.envs.toy_text.taxi import *
-from taxiSB import *
+from lunarSB import *
 import gymnasium
 from sklearn.tree import DecisionTreeClassifier
 

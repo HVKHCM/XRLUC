@@ -15,12 +15,12 @@
 from rl2 import *
 #from pong import *
 #from dqn import *
-from taxiSB import *
+from lunarSB import *
 from dt import *
 from log import *
 import tensorflow as tf
 import utils
-from explanation import *
+#from explanation import *
 from stable_baselines3 import DQN
 
 def learn_dt(agent, id):
@@ -43,7 +43,7 @@ def learn_dt(agent, id):
     
     # Data structures
     #env = get_pong_env()
-    env = te()
+    env = ll()
     #teacher = DQNPolicy(env, model_path)
     teacher = agent
     state_transformer = utils.state_transformer
@@ -114,8 +114,8 @@ if __name__ == '__main__':
     save_dirname = 'tmp/taxi'
     save_fname = 'dt_taxi.pk'
     save_viz_fname = 'dt_taxi.dot'
-    env = te()
-    agent = customDQN.load('trainedModel/taxiSBT/taxiSB.zip')
+    env = ll()
+    agent = customDQN.load('trainedModel/ll-test/taxiSB.zip')
     id = initial_data(env, agent, 200)
     students = simuation(agent, id, 10)
     #reward_list1 = get_sequence_all(env,123,2,students,25)
