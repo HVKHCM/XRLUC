@@ -11,7 +11,7 @@ import utils
 
 
 def get_rollout(env, policy):
-    env_decode = TaxiEnv()
+    #env_decode = TaxiEnv()
     obs, info = env.reset()
     #print(obs)
     #row, column, passe, des = env_decode.decode(obs)
@@ -289,22 +289,25 @@ def initial_data(env, teacher, n_batch_rollouts):
     trace = get_rollouts(env, teacher, False, n_batch_rollouts)
     return trace
 
-def get_sequence_reward(env, state, act, student, n_steps=25):
+def get_sequence_reward(state, act, student, n_steps=25):
     #initial step
     print("Start simulation")
-    env_decode = TaxiEnv()
-
-    row, column, passe, des = env_decode.decode(state)
-    state_tup= (row,column,passe,des)
-    state_list = list(state_tup)
+    #env_decode = TaxiEnv()
+    env = ll()
+    env.reset()
+    #row, column, passe, des = env_decode.decode(state)
+    #state_tup= (row,column,passe,des)
+    #state_list = list(state_tup)
     env.set_state(state)
+    print(env.get_state())
     #act = student.predict(state_list)
     next_obs, rew, done, truncated, info = env.step(act)
-    row, column, passe, des = env_decode.decode(next_obs)
-    next_state = (row,column,passe,des)
-    next_state = list(next_state)
+    #row, column, passe, des = env_decode.decode(next_obs)
+    #next_state = (row,column,passe,des)
+    next_state = next_obs
     step = 0
     reward = 0
+    
     while (step < n_steps):
         act = student.predict(next_state)
         next_obs, rew, done, truncated, info = env.step(act[0])
@@ -313,16 +316,17 @@ def get_sequence_reward(env, state, act, student, n_steps=25):
             break
         else:
             reward += rew
-        row, column, passe, des = env_decode.decode(next_obs)
-        next_state = (row,column,passe,des)
-        next_state = list(next_state)
+        #row, column, passe, des = env_decode.decode(next_obs)
+        #next_state = (row,column,passe,des)
+        next_state = next_obs
+        print(act[0])
         step += 1
     return reward
 
-def get_sequence_all(env, state, act, students, per_steps=25):
+def get_sequence_all(state, act, students, per_steps=25):
     reward_list = []
     for student in students:
-        reward_list.append(get_sequence_reward(env,state,act, student,per_steps))
+        reward_list.append(get_sequence_reward(state,act, student,per_steps))
     return reward_list
 
 def calculate_uncertainty(rel1, rel2):

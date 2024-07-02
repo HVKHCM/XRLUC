@@ -22,13 +22,15 @@ import tensorflow as tf
 import utils
 #from explanation import *
 from stable_baselines3 import DQN
+import time
+import csv
 
 def learn_dt(agent, id):
     # Parameters
     log_fname = '../taxi_dt.log'
     max_depth = 12
-    n_batch_rollouts = 200
-    max_samples = 200
+    n_batch_rollouts = 2000
+    max_samples = 2000
     max_iters = 2
     train_frac = 0.8
     is_reweight = True
@@ -115,14 +117,18 @@ if __name__ == '__main__':
     save_fname = 'dt_taxi.pk'
     save_viz_fname = 'dt_taxi.dot'
     env = ll()
-    agent = customDQN.load('trainedModel/ll-test/taxiSB.zip')
+    agent = customDQN.load('trainedModel/lunar/lunarSB.zip')
     id = initial_data(env, agent, 200)
+    obs, info = env.reset()
     students = simuation(agent, id, 10)
-    #reward_list1 = get_sequence_all(env,123,2,students,25)
-    #reward_list2 = get_sequence_all(env,123,3,students,25)
-    #print("Reward for taking action 2: {}".format(reward_list1))
-    #print("Reward for taking action 3: {}".format(reward_list2))
-
-    #conf_interval = calculate_uncertainty(reward_list1, reward_list2)
-    #print("Confidence interval: {}".format(conf_interval))
-
+    start = time.time()
+    reward_list1 = get_sequence_all(obs,1,students,25)
+    reward_list2 = get_sequence_all(obs,3,students,25)
+    conf_interval = calculate_uncertainty(reward_list1, reward_list2)
+    print("Confidence interval: {}".format(conf_interval))
+    end = time.time()
+    time = end - start
+    my_list = ['lunar','high',obs,100,10,25,time,conf_interval]
+    with open('data.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(my_list)
